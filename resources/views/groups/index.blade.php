@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="text-white font-semibold text-xl leading-tight">
+            <h2 class="dark:text-white font-semibold text-xl leading-tight">
                 {{ __('Groups') }}
             </h2>
             {{-- Add success message --}}
@@ -29,10 +29,10 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @forelse ($groups as $group)
-                <div class="bg-gray-700 rounded-lg overflow-hidden shadow-lg">
+                <div class="dark:bg-gray-700 rounded-lg overflow-hidden shadow-lg">
                     <img src="{{ asset('storage/' . $group->image) }}" alt="{{ $group->name }}" class="w-full h-56">
                     <div class="p-4">
-                        <h1 class="text-2xl font-semibold text-white">{{ $group->name }}</h1>
+                        <h1 class="text-2xl font-semibold dark:text-white">{{ $group->name }}</h1>
                         <p class="mt-2 text-gray-400">{{ $group->description }}</p>
                         <div class="mt-4">
                             <x-link :href="route('groups.show', $group->slug)" class="text-indigo-500 hover:text-white">
@@ -42,8 +42,8 @@
                     </div>
                 </div>
             @empty
-                <div class="bg-gray-700 rounded-lg overflow-hidden shadow-lg p-6">
-                    <h1 class="text-2xl font-medium text-white">You have no groups!</h1>
+                <div class="dark:bg-gray-700 rounded-lg overflow-hidden shadow-lg p-6">
+                    <h1 class="text-2xl font-medium dark:text-white">You have no groups!</h1>
                     <p class="mt-4 text-gray-500 leading-relaxed">
                         You can create a group by clicking the button below.
                     </p>

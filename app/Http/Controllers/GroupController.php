@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CreateGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
@@ -17,7 +18,8 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::get();
+        $groups = Group::all();
+   
         $groups->map(function($group) {
             $group->description = Str::limit($group->description, 100);
             return $group;
@@ -50,6 +52,8 @@ class GroupController extends Controller
         $group->image = $image ?? null;
 
         $group->save();
+
+        $group->users()->attach(auth()->id());
 
         return redirect()->route('groups.index')->with('success', 'Group created successfully');
     }
@@ -112,5 +116,13 @@ class GroupController extends Controller
         $group->delete();
 
         return redirect()->route('groups.index')->with('success', 'Group deleted successfully');
+    }
+
+    public function addMember(Request $request, $group)
+    {
+        $group = Group::where('slug', $group)->firstOrFail();
+        $group->users()->attach($request->user_id);
+
+        return back()->with('success', 'Memeber added to group successfully');
     }
 }

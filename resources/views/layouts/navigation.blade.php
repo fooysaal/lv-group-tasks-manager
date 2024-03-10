@@ -29,7 +29,7 @@
                         @if(Auth::user()->avatar)
                         <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                             <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="w-14 h-14 rounded-full">
-                            <div class="mt-5 ml-2 text-white font-semibold">
+                            <div class="mt-5 ml-2 dark:text-white font-semibold">
                                 {{ Auth::user()->name }}
                             </div>
                         </button>

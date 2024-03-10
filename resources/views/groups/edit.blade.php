@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <!-- Group Info Section -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <!-- Group Image -->
                         <div class="w-full h-56 overflow-hidden mb-4 object-cover">
@@ -23,7 +23,7 @@
                 </div>
 
                 <!-- Update Group Form Section -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <form action="{{ route('groups.update', $group->slug) }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -37,7 +37,7 @@
 
                             <div class="mt-4">
                                 <x-input-label for="description" :value="__('Group Description')" />
-                                <x-text-area id="description" class="block mt-1 w-full" name="description">{{ $group->description }}</x-text-area>
+                                <x-text-area id="description" class="block mt-1 w-full" name="description" rows="5">{{ $group->description }}</x-text-area>
                                 <x-input-error class="mt-2" :messages="$errors->get('description')" />
                             </div>
 
@@ -60,9 +60,9 @@
                 </div>
 
                 <!-- Delete Group Section -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
-                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
                             {{ __('Delete Group') }}
                         </h2>
 
