@@ -19,6 +19,41 @@
                     </div>
                 </div>
             @endif
+
+            {{-- add a notification dropdown --}}
+            <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                <button @click="open = !open" class="flex items-center focus:outline-none">
+                    <!-- Notification icon -->
+                    <svg class="h-6 w-6 text-gray-600 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <!-- Notification icon path -->
+                    </svg>
+                    
+                    <!-- Notification count badge -->
+                    <div x-show="open && {{ count($notifications) }} > 0" class="top-0 right-0 text-red-500 w-2 h-2 rounded-full flex justify-center items-center absolute">
+                        {{ count($notifications) }}
+                    </div>
+                </button>
+            
+                <!-- Notification dropdown -->
+                <div x-show="open" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-lg py-1 z-10">
+                    <!-- Check if there are notifications -->
+                    @if ($notifications->isNotEmpty())
+                        <!-- Iterate through notifications -->
+                        @foreach ($notifications as $notification)
+                        <p class="text-gray-400 text-xs px-4 py-1">New group request</p>
+                            <a href="{{ route('update-group-status', $notification->id) }}" class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900">
+                                <!-- Display notification content -->
+                                {{ $notification->group->name }}
+                                <!-- Add animation here -->
+                            </a>
+                            
+                        @endforeach
+                    @else
+                        <!-- Display empty state -->
+                        <div class="px-4 py-2 text-gray-800 dark:text-gray-200">No new notifications</div>
+                    @endif
+                </div>
+            </div>            
         </div>
     </x-slot>
 
@@ -26,50 +61,10 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 flex">
-                    {{-- cards starts here --}}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
-                            <div class="p-6">
-                                <div class="flex items center">
-                                    <div class="flex-shrink-0 h-12 w-12">
-                                        <img class="h-12 w-12 rounded-full" src="" alt="Group">
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Groups</div>
-                                        <div class="text-lg font-bold text-gray-900 dark:text-gray-100"></div>
-                                    </div>
-                                    <div class="ml-4">
-                                        <a href="" class="text-sm font-medium text-blue-600 dark:text-blue-400">View</a>
-                                    </div>
-                                    <div class="ml-4">
-                                        <a href="" class="text-sm font-medium text-blue-600 dark:text-blue-400">Create</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="flex-1">
+                        <h1 class="text-2xl font-bold">Welcome back, {{ Auth::user()->name }}!</h1>
+                        <p class="text-gray-600 dark:text-gray-400">Here's a quick overview of your account.</p>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        <div class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
-                            <div class="p-6">
-                                <div class="flex items center">
-                                    <div class="flex-shrink-0 h-12 w-12">
-                                        <img class="h-12 w-12 rounded-full" src="" alt="Group">
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">Assigned Task</div>
-                                        <div class="text-lg font-bold text-gray-900 dark:text-gray-100"></div>
-                                    </div>
-                                    <div class="ml-4">
-                                        <a href="" class="text-sm font-medium text-blue-600 dark:text-blue-400">View</a>
-                                    </div>
-                                    <div class="ml-4">
-                                        <a href="" class="text-sm font-medium text-blue-600 dark:text-blue-400">Create</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>              
                 </div>
             </div>
         </div>

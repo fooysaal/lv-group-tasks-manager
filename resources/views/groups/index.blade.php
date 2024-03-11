@@ -21,7 +21,7 @@
                 </div>
             @endif
 
-            <x-link :href="route('groups.create')" class="text-cyan-400 hover:text-white bg-cyan-950">
+            <x-link :href="route('groups.create')">
                 {{ __('Create Group') }}
             </x-link>
         </div>

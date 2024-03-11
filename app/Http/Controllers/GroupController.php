@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Group\Group;
+use App\Models\GroupMember;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CreateGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Models\GroupUser;
+use App\Notifications\GroupInvitationNotification;
+use PhpParser\Node\Stmt\GroupUse;
 
 class GroupController extends Controller
 {
@@ -53,7 +57,17 @@ class GroupController extends Controller
 
         $group->save();
 
-        $group->users()->attach(auth()->id());
+        // Insert the group user
+        $groupMember = new GroupUser();
+        $groupMember->group_id = $group->id;
+        $groupMember->user_id = Auth::id();
+        $groupMember->save();
+
+        $groupMember = new GroupMember();
+        $groupMember->group_id = $group->id;
+        $groupMember->user_id = Auth::id();
+        $groupMember->status = 'approved';
+        $groupMember->save();
 
         return redirect()->route('groups.index')->with('success', 'Group created successfully');
     }
@@ -64,12 +78,20 @@ class GroupController extends Controller
      */
     public function show($group)
     {
-        $group = Group::where('slug', $group)->firstOrFail();
+        $viewBag['group'] = Group::where('slug', $group)->firstOrFail();
         
-        $users = User::where('id', '!=', auth()->id())
-            ->whereNotIn('id', $group->users->pluck('id'))
+        
+        $viewBag['members'] = GroupMember::where('group_id', $viewBag['group']->id)
+        ->where('status', 'approved')
+        ->get();
+
+        $exist_member = GroupMember::where('group_id', $viewBag['group']->id)
+        ->get();
+        
+        $viewBag['users'] = User::whereNotIn('id', $exist_member->pluck('user_id')->toArray())
             ->get();
-        return view('groups.show', compact('group', 'users'));
+
+        return view('groups.show', $viewBag);
     }
 
     /**
@@ -121,8 +143,16 @@ class GroupController extends Controller
     public function addMember(Request $request, $group)
     {
         $group = Group::where('slug', $group)->firstOrFail();
-        $group->users()->attach($request->user_id);
 
-        return back()->with('success', 'Memeber added to group successfully');
+        foreach($request->users as $member) {
+            $user = User::find($member);
+            $groupMember = new GroupMember();
+            $groupMember->group_id = $group->id;
+            $groupMember->user_id = $user->id;
+            $groupMember->status = 'pending';
+            $groupMember->save();
+            
+        }
+        return redirect()->back()->with('success', 'Member added successfully');
     }
 }

@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl dark:text-white leading-tight">
-                {{ __('Group') }}: {{ $group->name }}
+                {{ __('Group') }}: {{ $group->name ?? 'No name'}}
             </h2>
             <x-link :href="route('groups.edit', $group->slug)" class="text-cyan-400 hover:text-white bg-cyan-950">
                 {{ __('Edit Group') }}
@@ -54,8 +54,8 @@
                             @csrf
                             <input type="hidden" name="group_id" value="{{ $group->id }}">
                             <div class="mb-4">
-                                <label for="user_id" class="block font-bold text-white">Select User</label>
-                                <select id="user_id" name="user_id[]" class="form-select mt-1 block w-full bg-gray-900 text-white" multiple>
+                                <label for="users" class="block font-bold text-white">Select User</label>
+                                <select id="users" name="users[]" class="form-select mt-1 block w-full bg-gray-900 text-white" multiple>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
@@ -70,21 +70,21 @@
                     {{-- Display group members --}}
                     <div class="dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg p-6 mt-2">
                         <h3 class="text-lg font-semibold mb-4 dark:text-white">Group Members</h3>
-                        @if ($group->users->isNotEmpty())
+                        @if ($group->members->isNotEmpty())
                             <ul class="dark:text-white">
-                                @foreach ($group->users as $user)
+                                @foreach ($members as $member)
                                     <li class="flex items-center justify-between">
                                         <div class="flex items-center mb-2">
-                                            @if ($user->avatar)
-                                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}'s avatar" class="w-8 h-8 rounded-full mr-2">
+                                            @if ($member->avatar)
+                                                <img src="{{ asset('storage/' . $member->avatar) }}" alt="{{ $member->name }}'s avatar" class="w-8 h-8 rounded-full mr-2">
                                             @else
                                                 <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-semibold mr-2">
-                                                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                                                    {{ strtoupper(substr($member->name, 0, 2)) }}
                                                 </div>
                                             @endif
-                                            {{ $user->name }}
+                                            {{ optional($member->user)->name }}
                                         </div>
-                                        <button class="eye-btn" data-user-id="{{ $user->id }}">👁️</button>
+                                        <button class="eye-btn" data-user-id="{{ $member->id }}">👁️</button>
                                     </li>
                                 @endforeach
                             </ul>
