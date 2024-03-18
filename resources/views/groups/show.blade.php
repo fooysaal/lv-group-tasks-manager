@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl dark:text-white leading-tight">
                 {{ __('Group') }}: {{ $group->name ?? 'No name'}}
             </h2>
-            <x-link :href="route('groups.edit', $group->slug)" class="text-cyan-400 hover:text-white bg-cyan-950">
+            <x-link :href="route('groups.edit', $group->slug)" class="dark:bg-violet-500">
                 {{ __('Edit Group') }}
             </x-link>
         </div>
@@ -47,7 +47,8 @@
                     </div>
                 </div>
                 <div class="col-span-4">
-                    {{-- Add members dropdown --}}
+                    {{-- Add members --}}
+
                     <div class="bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg p-6">
                         <h3 class="text-lg font-semibold mb-4 text-white">Add Members</h3>
                         <form method="POST" action="{{ route('groups.members.add', $group->slug) }}">
@@ -75,11 +76,15 @@
                                 @foreach ($members as $member)
                                     <li class="flex items-center justify-between">
                                         <div class="flex items-center mb-2">
-                                            @if ($member->avatar)
-                                                <img src="{{ asset('storage/' . $member->avatar) }}" alt="{{ $member->name }}'s avatar" class="w-8 h-8 rounded-full mr-2">
+                                            @if (($member->user)->avatar)
+                                                <img src="{{ asset('storage/' . $member->user->avatar) }}" class="w-8 h-8 rounded-full mr-2">
                                             @else
                                                 <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-semibold mr-2">
-                                                    {{ strtoupper(substr($member->name, 0, 2)) }}
+                                                    @php
+                                                        $words = explode(' ', optional($member->user)->name);
+                                                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                                                        echo $initials;
+                                                    @endphp
                                                 </div>
                                             @endif
                                             {{ optional($member->user)->name }}
