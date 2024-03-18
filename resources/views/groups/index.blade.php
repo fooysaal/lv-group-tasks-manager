@@ -4,28 +4,60 @@
             <h2 class="dark:text-white font-semibold text-xl leading-tight">
                 {{ __('Groups') }}
             </h2>
-            {{-- Add success message --}}
-            @if (session('success'))
-                <div class="flex justify-center mb-4">
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md flex items-center">
-                        <strong class="font-bold mr-2">Success!</strong>
-                        <span class="block">{{ session('success') }}</span>
-                        {{-- Add a close button --}}
-                        <span class="ml-auto">
-                            <svg onclick="this.parentElement.parentElement.style.display = 'none'" class="fill-current h-6 w-6 text-green-500 cursor-pointer" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <title>Close</title>
-                                <path d="M14.348 14.849a1 1 0 01-1.497-1.316l1.849-2.5-1.849-2.5a1 1 0 111.497-1.316l1.849 2.5 1.849-2.5a1 1 0 111.497 1.316l-1.849 2.5 1.849 2.5a1 1 0 01.001 1.316l-1.849 2.5a1 1 0 01-1.498 0l-1.849-2.5-1.849 2.5a1 1 0 01-.001 1.316l.001.001z"/>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-            @endif
 
-            <x-link :href="route('groups.create')">
-                {{ __('Create Group') }}
-            </x-link>
+            {{-- Create Group Modal Trigger --}}
+            <div class="flex items-center">
+                <button onclick="toggleModal('createGroupModal')" class="bg-gray-700 dark:bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">Create Group</button>
+            </div>
         </div>
     </x-slot>
+    
+    {{-- Create Group Modal --}}
+    <div id="createGroupModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true" onclick="toggleModal('createGroupModal')">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white dark:bg-gray-700 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium dark:text-white" id="modal-title">
+                                Create New Group
+                            </h3>
+                            <div class="mt-2">
+                                <form method="POST" action="{{ route('groups.store') }}" enctype="multipart/form-data">
+                                    @csrf
+                                    <div>
+                                        <x-input-label for="name" :value="__('Group Name')" />
+                                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" autofocus />
+                                        <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                                    </div>
+                                    <div class="mt-4">
+                                        <x-input-label for="description" :value="__('Group Description')" />
+                                        <x-text-area id="description" class="block mt-1 w-full" name="description">{{ old('description') }}</x-text-area>
+                                        <x-input-error class="mt-2" :messages="$errors->get('description')" />
+                                    </div>
+                                    <div class="mt-4">
+                                        <x-input-label for="image" :value="__('Group Image')" />
+                                        <x-file-input id="image" class="block mt-1 w-full" type="file" name="image" :value="old('image')" autofocus />
+                                        <x-input-error class="mt-2" :messages="$errors->get('image')" />
+                                    </div>
+                                    <div class="flex justify-start mt-6">
+                                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                            {{ __('Create Group') }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @forelse ($groups as $group)
@@ -57,3 +89,10 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    function toggleModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.toggle('hidden');
+    }
+</script>

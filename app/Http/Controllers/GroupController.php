@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CreateGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Models\GroupUser;
-use App\Notifications\GroupInvitationNotification;
-use PhpParser\Node\Stmt\GroupUse;
 
 class GroupController extends Controller
 {
@@ -22,14 +20,8 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::all();
-   
-        $groups->map(function($group) {
-            $group->description = Str::limit($group->description, 100);
-            return $group;
-        });
-
-        return view('groups.index', compact('groups'));
+        $viewBag['groups'] = Group::all();
+        return view('groups.index', $viewBag);
     }
 
     /**
@@ -37,7 +29,7 @@ class GroupController extends Controller
      */
     public function create()
     {
-        return view('groups.create');
+        //
     }
 
     /**
@@ -153,6 +145,6 @@ class GroupController extends Controller
             $groupMember->save();
             
         }
-        return redirect()->back()->with('success', 'Member added successfully');
+        return redirect()->back()->with('success', 'Member invited successfully');
     }
 }
