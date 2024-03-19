@@ -62,7 +62,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             @forelse ($groups as $group)
                 <div class="dark:bg-gray-700 rounded-lg overflow-hidden shadow-lg">
-                    <img src="{{ asset('storage/' . $group->image) }}" alt="{{ $group->name }}" class="w-full h-56">
+                    @if($group->image)
+                        <img src="{{ asset('storage/' . $group->image) }}" alt="{{ $group->name }}" class="w-full h-56">
+                    @else
+                        <div class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-red-200 hover:to-indigo-600 text-center text-2xl font-bold text-white h-56 flex items-center justify-center">
+                            {{ $group->name }}
+                        </div>
+                    @endif
                     <div class="p-4">
                         <h1 class="text-2xl font-semibold dark:text-white">{{ $group->name }}</h1>
                         <p class="mt-2 text-gray-400">{{ $group->description }}</p>
