@@ -20,7 +20,6 @@
                         <x-link :href="route('group.tasks.create', $group->slug)" class="dark:bg-blue-400 hover:bg-blue-700 dark:hover:bg-blue-600">
                             {{ __('Create Task') }}
                         </x-link>
-                        
                     </div>
 
                     {{-- Displaying group activity --}}
@@ -46,38 +45,58 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-span-4">
-                    {{-- Add members --}}
-
-                    <div class="bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg p-6">
-                        <h3 class="text-lg font-semibold mb-4 text-white">Add Members</h3>
-                        <form method="POST" action="{{ route('groups.members.add', $group->slug) }}">
-                            @csrf
-                            <input type="hidden" name="group_id" value="{{ $group->id }}">
-                            <div class="mb-4">
-                                <label for="users" class="block font-bold text-white">Select User</label>
-                                <select id="users" name="users[]" class="form-select mt-1 block w-full bg-gray-900 text-white" multiple>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="flex justify-end">
-                                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Member</button>
-                            </div>
-                        </form>
-                    </div>
-                    
+                <div class="col-span-4">                    
                     {{-- Display group members --}}
                     <div class="dark:bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg p-6 mt-2">
-                        <h3 class="text-lg font-semibold mb-4 dark:text-white">Group Members</h3>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold dark:text-white">Members</h3>
+                            <button onclick="toggleModal('createGroupModal')" class="bg-gray-700 dark:bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded">Invite Members</button>
+                        </div>
+                        <div id="createGroupModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+                            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                <div class="fixed inset-0 transition-opacity" aria-hidden="true" onclick="toggleModal('createGroupModal')">
+                                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                                </div>
+                                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                                <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                    <div class="bg-white dark:bg-gray-700 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                        <div class="sm:flex sm:items-start">
+                                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                <h3 class="text-lg leading-6 font-medium dark:text-white" id="modal-title">
+                                                    Invite Members
+                                                </h3>
+                                                <div class="mt-2">
+                                                   {{-- show form to show all users and select multiple users --}}
+                                                    <form action="{{ route('groups.members.add', $group->slug) }}" method="POST">
+                                                          @csrf
+                                                          <div class="grid grid-cols-1 gap-6">
+                                                                <div class="col-span-6 sm:col-span-3">
+                                                                 <label for="users" class="block text-sm font-medium dark:text-white">Select Users</label>
+                                                                 <select name="users[]" id="users" multiple class="mt-1 block w-full dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:border-violet-500 dark:focus:ring-violet-500 dark:placeholder-gray-400 dark:text-gray-900 dark:placeholder-opacity-75 sm:text-sm rounded-md">
+                                                                      @foreach ($users as $user)
+                                                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                                      @endforeach
+                                                                 </select>
+                                                                </div>
+                                                          </div>
+                                                          <div class="mt-5 sm:mt-6">
+                                                                <button type="submit" class="dark:bg-violet-500 dark:hover:bg-violet-600 dark:text-white font-semibold py-2 px-4 rounded">Invite</button>
+                                                          </div>
+                                                     </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         @if ($group->members->isNotEmpty())
                             <ul class="dark:text-white">
                                 @foreach ($members as $member)
                                     <li class="flex items-center justify-between">
                                         <div class="flex items-center mb-2">
                                             @if (($member->user)->avatar)
-                                                <img src="{{ asset('storage/' . $member->user->avatar) }}" class="w-8 h-8 rounded-full mr-2">
+                                                <img src="{{ Storage::url($member->user->avatar) }}" alt="{{ $member->user->name }}" class="w-8 h-8 rounded-full mr-2">
                                             @else
                                                 <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-semibold mr-2">
                                                     @php
@@ -98,7 +117,15 @@
                         @endif
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    function toggleModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.classList.toggle('hidden');
+    }
+</script>

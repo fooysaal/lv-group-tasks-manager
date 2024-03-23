@@ -20,7 +20,10 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $viewBag['groups'] = Group::all();
+        $viewBag['groups'] = Group::whereHas('members', function($query) {
+            $query->where('user_id', Auth::id());
+        })->get()->sortByDesc('id');
+
         return view('groups.index', $viewBag);
     }
 

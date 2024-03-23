@@ -39,15 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     //groups routes
-    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
-    Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
-    Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groups.show');
-    Route::get('/groups/{group}/edit', [GroupController::class, 'edit'])->name('groups.edit');
-    Route::put('/groups/{group}', [GroupController::class, 'update'])->name('groups.update');
-    Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
-
+    Route::resource('groups', GroupController::class);
+    //group members routes
     Route::post('/groups/{group}/members', [GroupController::class, 'addMember'])->name('groups.members.add');
-
+    //group tasks routes
     Route::get('{group}/tasks/create', [GroupTaskController::class, 'create'])->name('group.tasks.create');
 
 });

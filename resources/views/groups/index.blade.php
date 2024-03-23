@@ -22,7 +22,7 @@
             <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="bg-white dark:bg-gray-700 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <div class="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg leading-6 font-medium dark:text-white" id="modal-title">
                                 Create New Group
                             </h3>
@@ -41,11 +41,11 @@
                                     </div>
                                     <div class="mt-4">
                                         <x-input-label for="image" :value="__('Group Image')" />
-                                        <x-file-input id="image" class="block mt-1 w-full" type="file" name="image" :value="old('image')" autofocus />
+                                        <x-file-input id="image" class="block mt-1 " type="file" name="image" :value="old('image')" autofocus />
                                         <x-input-error class="mt-2" :messages="$errors->get('image')" />
                                     </div>
-                                    <div class="flex justify-start mt-6">
-                                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                    <div class="mt-6">
+                                        <button type="submit" class="bg-gray-500 hover:bg-green-700 text-white py-1 px-1.5 rounded">
                                             {{ __('Create Group') }}
                                         </button>
                                     </div>
@@ -63,7 +63,7 @@
             @forelse ($groups as $group)
                 <div class="dark:bg-gray-700 rounded-lg overflow-hidden shadow-lg">
                     @if($group->image)
-                        <img src="{{ asset('storage/' . $group->image) }}" alt="{{ $group->name }}" class="w-full h-56">
+                        <img src="{{ Storage::url($group->image) }}" alt="{{ $group->name }}" class="w-full h-56 object-cover">
                     @else
                         <div class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-red-200 hover:to-indigo-600 text-center text-2xl font-bold text-white h-56 flex items-center justify-center">
                             {{ $group->name }}
@@ -86,7 +86,7 @@
                         You can create a group by clicking the button below.
                     </p>
                     <div class="mt-4">
-                        <x-link :href="route('groups.create')" class="text-indigo-500 hover:text-white">
+                        <x-link onclick="toggleModal('createGroupModal')" class="text-indigo-500 hover:text-white">
                             Create a Group
                         </x-link>
                     </div>

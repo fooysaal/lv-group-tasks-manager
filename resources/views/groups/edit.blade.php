@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <!-- Group Info Section -->
@@ -13,7 +13,13 @@
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <!-- Group Image -->
                         <div class="w-full h-56 overflow-hidden mb-4 object-cover">
-                            <img src="{{ asset('storage/' . $group->image) }}" alt="{{ $group->name }}" class="w-full h-full">
+                        @if($group->image)
+                            <img src="{{ Storage::url($group->image) }}" alt="{{ $group->name }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-red-200 hover:to-indigo-600 text-center text-2xl font-bold text-white h-56 flex items-center justify-center">
+                                {{ $group->name }}
+                            </div>
+                        @endif
                         </div>
                         <!-- Group Name -->
                         <h3 class="text-2xl font-semibold mb-2">{{ $group->name }}</h3>

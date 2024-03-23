@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
+            $table->date('due_date');
             $table->timestamps();
         });
     }
